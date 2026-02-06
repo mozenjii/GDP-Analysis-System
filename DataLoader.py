@@ -18,5 +18,3 @@ ds = loadedData[list(expectedFields)].copy()
 if ds.empty:
     raise CustomError("Restructuring Failed!")
 
-
-print(ds.isna().sum())
