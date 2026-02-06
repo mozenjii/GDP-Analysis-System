@@ -2,4 +2,4 @@ from DataLoader import ds
 
 print(ds.duplicated())
 
-#hello from talal
+#hello from talald
