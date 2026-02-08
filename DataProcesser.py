@@ -43,6 +43,7 @@ def statistics(fds,op,year):
   else:
     return sum/(len(fds)*1.0)
 
+
 def processModule(rds, region, year): # raw data set parameter
   ds = cleanData(rds)
   return filterData(ds,region,year)
