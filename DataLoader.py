@@ -1,9 +1,12 @@
 import pandas as pd
 
-try:
-    loadedData = pd.read_excel("gdp_with_continent_filled.xlsx")
-except:
-    print("Error: ""GDP with continent data"" file not found!")
+loadedData = None
+
+def loadData():
+    try:
+        loadedData = pd.read_excel("gdp_with_continent_filled.xlsx")
+    except:
+        print("Error: ""GDP with continent data"" file not found!")
 
 expectedFields = {'Country Name', 'Country Code','Continent', 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 
                   1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 
@@ -11,10 +14,15 @@ expectedFields = {'Country Name', 'Country Code','Continent', 1960, 1961, 1962, 
                   1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 
                   2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024}
 
-if not (loadedData.shape == (266,70) and expectedFields.issubset(set(loadedData.columns))):
-    raise CustomError("Data structured in an unknown way!")
+def validateData(loadedData):
+    if not (loadedData.shape == (266,70) and expectedFields.issubset(set(loadedData.columns))):
+        raise CustomError("Data structured in an unknown way!")
 
-ds = loadedData[list(expectedFields)].copy()
-if ds.empty:
-    raise CustomError("Restructuring Failed!")
+ds = None
+
+def restructureData(loadedData):
+    ds = loadedData[list(expectedFields)].copy()
+    if ds.empty:
+        raise CustomError("Restructuring Failed!")
+
 
