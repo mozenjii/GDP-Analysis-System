@@ -1,6 +1,7 @@
 from DataLoader import loadModule, pd
 import numpy as np
 from functools import reduce
+from utility import *
 ds = loadModule()
 
 
@@ -25,24 +26,26 @@ def cleanData(rds):
 
 def filterAttributes(index, ds, year):
     row = ds.loc[index].copy()
-    cols = ["Country Name", "Country Code", "Continent", year]
-    return pd.Series(row[cols].values, index=cols)
+    cols = ["Country Name", "Country Code", "Continent"]
+    attributes = safeExtend(cols,year)
+    return pd.Series(row[attributes].values, index=attributes)
 
 
-def filter(ds, region, year):
+def filterData(ds, region, year):
     filteredData = filter(lambda t: getattr(t, "Continent", None) == region, ds.itertuples())
     rows = list(map(lambda t: filterAttributes(t.Index, ds, year), filteredData))
-    cols = ["Country Name", "Country Code", "Continent", year]
-    return pd.DataFrame(rows, columns=cols)
+    cols = ["Country Name", "Country Code", "Continent"]
+    attributes = safeExtend(cols,year)
+    return pd.DataFrame(rows, columns=attributes)
 
-def statistics(ds,op):
-  sum = reduce(lambda e,i: e + i, ds.iloc[:, 3].tolist())
+def statistics(ds,op,year):
+  sum = reduce(lambda e,i: e + i, ds.loc[:, year].dropna().tolist())
   if op == "sum":
     return sum
   else:
     return sum/(len(ds)*1.0)
 
 
-list = filter(cleanData(ds), "Asia", 2000)
+list = filterData(cleanData(ds), "Asia", 2000)
 print(list)
 print(statistics(list,"average"))
