@@ -1,6 +1,7 @@
-from DataLoader import ds, pd
+from DataLoader import loadModule, pd
 import numpy as np
 from functools import reduce
+ds = loadModule()
 
 
 fields = [1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 
@@ -10,15 +11,38 @@ fields = [1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971
         2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
 
 
-def fillNull(index):
-    row = ds.loc[index].copy()
+def fillNull(index,rds): #raw data set
+    row = rds.loc[index].copy()
     yearVals = list(row[fields])
     valid = list(filter(lambda w: pd.notna(w) and isinstance(w, (int, float)) and w > 0, yearVals))
     mean = (reduce(lambda e,i: e + i, valid)/len(valid)) if valid else 0
     filledCols = row[fields].fillna(mean)
     return pd.concat([row.drop(fields), filledCols])
 
-cds = pd.DataFrame(list(map(fillNull, ds.index)), index=ds.index, columns=ds.columns) #cleaned dataset
+def cleanData(rds):
+    ds = pd.DataFrame(list(map(lambda index: fillNull(index, rds), rds.index)), index=rds.index, columns=rds.columns) #dataset
+    return ds
 
-print(cds)
+def filterAttributes(index, ds, year):
+    row = ds.loc[index].copy()
+    cols = ["Country Name", "Country Code", "Continent", year]
+    return pd.Series(row[cols].values, index=cols)
 
+
+def filter(ds, region, year):
+    filteredData = filter(lambda t: getattr(t, "Continent", None) == region, ds.itertuples())
+    rows = list(map(lambda t: filterAttributes(t.Index, ds, year), filteredData))
+    cols = ["Country Name", "Country Code", "Continent", year]
+    return pd.DataFrame(rows, columns=cols)
+
+def statistics(ds,op):
+  sum = reduce(lambda e,i: e + i, ds.iloc[:, 3].tolist())
+  if op == "sum":
+    return sum
+  else:
+    return sum/(len(ds)*1.0)
+
+
+list = filter(cleanData(ds), "Asia", 2000)
+print(list)
+print(statistics(list,"average"))

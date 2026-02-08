@@ -3,6 +3,7 @@ import pandas as pd
 loadedData = None
 
 def loadData():
+    global loadedData
     try:
         loadedData = pd.read_excel("gdp_with_continent_filled.xlsx")
     except:
@@ -18,11 +19,17 @@ def validateData(loadedData):
     if not (loadedData.shape == (266,70) and expectedFields.issubset(set(loadedData.columns))):
         raise CustomError("Data structured in an unknown way!")
 
-ds = None
+rds = None
 
 def restructureData(loadedData):
-    ds = loadedData[list(expectedFields)].copy()
-    if ds.empty:
+    global rds
+    rds = loadedData[list(expectedFields)].copy()
+    if rds.empty:
         raise CustomError("Restructuring Failed!")
 
 
+def loadModule():
+    loadData()
+    validateData(loadedData)
+    restructureData(loadedData)
+    return rds
