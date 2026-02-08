@@ -27,3 +27,5 @@ Thumbs.db
 # Logs and temporary files
 *.log
 *.tmp
+
+*tempCodeRunnerFile.py
