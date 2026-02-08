@@ -45,7 +45,3 @@ def statistics(ds,op,year):
   else:
     return sum/(len(ds)*1.0)
 
-
-list = filterData(cleanData(ds), "Asia", 2000)
-print(list)
-print(statistics(list,"average"))
