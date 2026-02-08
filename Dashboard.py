@@ -89,9 +89,17 @@ def runDashboard(config, fds, cds, stat):
         barChart.set_ylabel("GDP")
         barChart.tick_params(axis="x", rotation=90)
 
+        values = fds[year]
+        labels = fds["Country Code"]
+        total = values.sum()
+        angles = (values / total) * 360
+
+        # Show labels only if angle > 10 degrees
+        filteredLabels = [label if angle >= 10 else "" for label, angle in zip(labels, angles)]
+
         # Regionwise Pie chart
         pieChart = axes[0, 1]
-        pieChart.pie(fds[year], labels=fds["Country Code"], autopct="%1.1f%%", startangle=90)
+        pieChart.pie(values,labels=filteredLabels,autopct=lambda pct: f"{pct:.1f}%" if pct * 3.6 >= 10 else "",)
         pieChart.set_title(f"Region-wise GDP — Pie chart ({region}, {year})")
 
         # Year pecific Line graph (regional total GDP per year)
