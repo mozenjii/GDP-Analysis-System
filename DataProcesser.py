@@ -1,8 +1,6 @@
-from DataLoader import loadModule, pd
-import numpy as np
+import pandas as pd
 from functools import reduce
 from utility import *
-ds = loadModule()
 
 
 fields = [1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 
@@ -45,3 +43,6 @@ def statistics(ds,op,year):
   else:
     return sum/(len(ds)*1.0)
 
+def processModule(rds, region, year): # raw data set parameter
+  ds = cleanData()
+  return filterData(ds)
