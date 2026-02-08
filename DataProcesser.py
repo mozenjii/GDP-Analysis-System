@@ -36,13 +36,13 @@ def filterData(ds, region, year):
     attributes = safeExtend(cols,year)
     return pd.DataFrame(rows, columns=attributes)
 
-def statistics(ds,op,year):
-  sum = reduce(lambda e,i: e + i, ds.loc[:, year].dropna().tolist())
+def statistics(fds,op,year):
+  sum = reduce(lambda e,i: e + i, fds.loc[:, year].dropna().tolist())
   if op == "sum":
     return sum
   else:
-    return sum/(len(ds)*1.0)
+    return sum/(len(fds)*1.0)
 
 def processModule(rds, region, year): # raw data set parameter
-  ds = cleanData()
-  return filterData(ds)
+  ds = cleanData(rds)
+  return filterData(ds,region,year)

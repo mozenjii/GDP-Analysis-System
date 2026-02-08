@@ -1,4 +1,6 @@
 import json
+from DataLoader import loadModule
+from DataProcesser import processModule, statistics
 
 
 def readConfig():
@@ -31,6 +33,11 @@ def validateConfig():
         raise ValueError("Undefined Operation detected!")
     print("Successful")
 
+rds = loadModule() # Raw Data Set
+fds = processModule(rds, config["region"], config["year"]) # Cleaned & Filtered Data Set
 
+print(fds)
+
+opResult = statistics(fds,config["operation"],config["year"])
 
 print(config["region"])
