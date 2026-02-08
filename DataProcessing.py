@@ -14,7 +14,7 @@ def fillNull(index):
     row = ds.loc[index].copy()
     yearVals = list(row[fields])
     valid = list(filter(lambda w: pd.notna(w) and isinstance(w, (int, float)) and w > 0, yearVals))
-    mean = (reduce(lambda e, i: e + i, valid) / len(valid)) if valid else np.nan
+    mean = (reduce(lambda e,i: e + i, valid)/len(valid)) if valid else 0
     filledCols = row[fields].fillna(mean)
     return pd.concat([row.drop(fields), filledCols])
 
