@@ -1,6 +1,6 @@
 {
-  "region": "Europe",
+  "region": "Oceania",
   "year": 1998,
-  "operation": "average",
-  "output": "sum"
+  "operation": "sum",
+  "output": "Dashboard"
 }
