@@ -11,7 +11,7 @@ class TransformationEngine(PipelineService):
         self.sink = sink
         self.config = config
 
-    def fillNull(index,rds): #raw data set
+    def fillNull(self,index,rds): #raw data set
         exclude = ["Indicator_Name", "Indicator_Code","Country_Name", "Country_Code","Continent"]
         fields = [col for col in rds.columns if col not in exclude]
         row = rds.loc[index].copy()
@@ -21,25 +21,140 @@ class TransformationEngine(PipelineService):
         filledCols = row[fields].fillna(mean)
         return pd.concat([row.drop(fields), filledCols])
 
-    def cleanData(rds):
-        ds = pd.DataFrame(list(map(lambda index: self.fillNull(index, rds), rds.index)), index=rds.index, columns=rds.columns) #dataset
+    def cleanData(self, rds):
+        ds = pd.DataFrame(
+            [self.fillNull(index, rds) for index in rds.index],
+            index=rds.index
+        )
         return ds
-
                                    
-    def filterAttributes(index, ds, year):
+    def filterAttributes(self,index, ds, year):
         row = ds.loc[index].copy()
         cols = ["Country Name", "Country Code", "Continent"]
         attributes = safeExtend(cols,year)
         return pd.Series(row[attributes].values, index=attributes)
 
-    def filterData(ds, region, year):
+    def filterData(self,ds, region, year):
         filteredData = filter(lambda t: getattr(t, "Continent", None) == region, ds.itertuples())
         rows = list(map(lambda t: self.filterAttributes(t.Index, ds, year), filteredData))
         cols = ["Country Name", "Country Code", "Continent"]
         attributes = safeExtend(cols,year)
         return pd.DataFrame(rows, columns=attributes)
 
-    def statistics(fds,op,year):
+    def top10(self, ds, region, year):
+        year = str(year)
+        filtered = ds[ds["Continent"] == region]
+        sorted_df = filtered.sort_values(by=year, ascending=False)
+        result = sorted_df[["Country Name", year]].head(10)
+        return list(result.itertuples(index=False, name=None))
+    
+    def bottom10(self, ds, region, year):
+        year = str(year)
+
+        filtered = ds[ds["Continent"] == region]
+        sorted_df = filtered.sort_values(by=year, ascending=True)
+
+        result = sorted_df[["Country Name", year]].head(10)
+
+        return list(result.itertuples(index=False, name=None))
+    
+    def growthRates(self, ds, region, start_year, end_year):
+        start_year = str(start_year)
+        end_year = str(end_year)
+
+        filtered = ds[ds["Continent"] == region]
+
+        def computeGrowth(row):
+            start = row[start_year]
+            end = row[end_year]
+            if start > 0:
+                return ((end - start) / start) * 100
+            return 0
+
+        growth_list = list(
+            map(lambda row: (
+                row["Country Name"],
+                compute_growth(row)
+            ),
+            filtered.to_dict("records"))
+        )
+
+        return growth_list
+    
+
+    def avgByContinent(self, ds, start_year, end_year):
+        years = list(map(str, range(start_year, end_year + 1)))
+
+        continents = ds["Continent"].unique()
+
+        def compute_avg(continent):
+            subset = ds[ds["Continent"] == continent]
+            avg = subset[years].mean().mean()
+            return (continent, avg)
+
+        return list(map(compute_avg, continents))
+
+    def globalTrend(self, ds, start_year, end_year):
+        years = list(map(str, range(start_year, end_year + 1)))
+
+        return list(
+            map(lambda year: (
+                year,
+                ds[year].sum()
+            ),
+            years)
+        )
+
+    def fastestContinent(self, ds, start_year, end_year):
+        start_year = str(start_year)
+        end_year = str(end_year)
+
+        continents = ds["Continent"].unique()
+
+        def growth(continent):
+            subset = ds[ds["Continent"] == continent]
+            start_total = subset[start_year].sum()
+            end_total = subset[end_year].sum()
+
+            if start_total > 0:
+                return ((end_total - start_total) / start_total)
+            return 0
+
+        growth_values = list(map(lambda c: (c, growth(c)), continents))
+
+        return max(growth_values, key=lambda x: x[1])[0]
+
+    def consistentDecline(self, ds, region, end_year, x):
+        years = list(map(str, range(end_year - x + 1, end_year + 1)))
+
+        filtered = ds[ds["Continent"] == region]
+
+        def declining(row):
+            values = [row[y] for y in years]
+            return all(values[i] > values[i+1] for i in range(len(values)-1))
+
+        return list(
+            map(lambda r: r["Country Name"],
+                filter(declining, filtered.to_dict("records")))
+        )
+
+    def contribution(self, ds, start_year, end_year):
+        years = list(map(str, range(start_year, end_year + 1)))
+
+        global_total = ds[years].sum().sum()
+
+        continents = ds["Continent"].unique()
+
+        def compute(continent):
+            subset = ds[ds["Continent"] == continent]
+            total = subset[years].sum().sum()
+            return (continent, (total / global_total) * 100)
+
+        return list(map(compute, continents))
+    
+
+
+    def statistics(self,fds,op,year):
         sum = reduce(lambda e,i: e + i, fds.loc[:, year].dropna().tolist())
         if op == "sum":
             return sum
@@ -49,6 +164,15 @@ class TransformationEngine(PipelineService):
     def execute(self, raw_data: List[Any]) -> None:
 
         ds = self.cleanData(raw_data)
-        fds = self.filterData(ds,self.config["region"],self.config["year"])
         stat = self.statistics(fds,self.config["operation"],self.config["year"])
+        results = {
+        "top_10": self.top10(ds, self.config["region"], self.config["year"]),
+        "bottom_10": self.bottom10(ds, self.config["region"], self.config["year"]),
+        "growth_rates": self.growthRates(ds,self.config["region"],self.config["start_year"],self.config["end_year"]),
+        "avg_by_continent": self.avgByContinent(ds,self.config["start_year"],self.config["end_year"]),
+        "global_trend": self.globalTrend(ds,self.config["start_year"],self.config["end_year"]),
+        "fastest_continent": self.fastestContinent(ds,self.config["start_year"],self.config["end_year"]),
+        "decline_countries": self.consistentDecline(ds,self.config["region"],self.config["end_year"],self.config["decline_years"]),
+        "contribution": self.contribution(ds,self.config["start_year"],self.config["end_year"])
+    }
         #self.sink.write(results)

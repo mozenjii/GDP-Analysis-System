@@ -22,7 +22,7 @@ def readConfig():
 def validateConfig(config):
     print("Validating the configuration file...")
     #checking the required fields
-    requiredKeys = ["region", "year", "operation", "output","input"]
+    requiredKeys = ["region", "year", "operation", "output","input", "start_year","end_year","decline_years"]
     for key in requiredKeys:
         if key not in config:
             raise ValueError(f"Missing Value: {key}")
@@ -38,8 +38,14 @@ def validateConfig(config):
         raise TypeError("Output must be a string")
     if not isinstance(config["input"], str):
         raise TypeError("Input must be a string")
+    if not isinstance(config["end_year"], int):
+        raise TypeError("End Year must be an integer")
+    if not isinstance(config["start_year"], int):
+        raise TypeError("Start Year must be an integer")
+    if not isinstance(config["decline_years"], int):
+        raise TypeError("Decline Years must be integers")
     
-    if config["operation"] == "average" or "sum":
+    if config["operation"] not in ["average", "sum"]:
         raise ValueError("Undefined Operation detected!")
     print("Successful")
 

@@ -3,5 +3,8 @@
   "year": 1998,
   "operation": "sum",
   "output": "console",
-  "input": "excel"
+  "input": "excel",
+  "start_year": 2015,
+  "end_year": 2020,
+  "decline_years": 3
 }
