@@ -87,6 +87,22 @@ class TransformationEngine(PipelineService):
             years)
         )
 
+    def fastestContinent(self, ds, start_year, end_year):
+        continents = ds["Continent"].unique()
+
+        def growth(continent):
+            subset = ds[ds["Continent"] == continent]
+            startTotal = subset[start_year].sum()
+            endTotal = subset[end_year].sum()
+
+            if startTotal > 0:
+                return ((endTotal - startTotal) / startTotal)
+            return 0
+
+        growthValues = list(map(lambda c: (c, growth(c)), continents))
+
+        return max(growthValues, key=lambda x: x[1])[0]
+
     def statistics(self,fds,op,year):
         sum = reduce(lambda e,i: e + i, fds.loc[:, year].dropna().tolist())
         if op == "sum":
