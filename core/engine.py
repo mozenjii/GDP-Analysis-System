@@ -69,6 +69,16 @@ class TransformationEngine(PipelineService):
 
         return growthList
     
+    
+    def avgByContinent(self, ds, start_year, end_year):
+        years = list(range(start_year, end_year + 1))
+        continents = ds["Continent"].unique()
+        def computeAvg(continent):
+            subset = ds[ds["Continent"] == continent]
+            avg = subset[years].mean().mean()
+            return (continent, avg)
+
+        return list(map(computeAvg, continents))
 
     def statistics(self,fds,op,year):
         sum = reduce(lambda e,i: e + i, fds.loc[:, year].dropna().tolist())
