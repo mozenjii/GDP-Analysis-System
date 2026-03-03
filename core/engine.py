@@ -41,7 +41,12 @@ class TransformationEngine(PipelineService):
         attributes = safeExtend(cols,year)
         return pd.DataFrame(rows, columns=attributes)
 
-
+    def top10(self, ds, region, year):
+        filtered = ds[ds["Continent"] == region]
+        sortedDf = filtered.sort_values(by=year, ascending=False)
+        result = sortedDf[["Country Name", year]].head(10)
+        return list(result.itertuples(index=False, name=None))
+    
 
     def statistics(self,fds,op,year):
         sum = reduce(lambda e,i: e + i, fds.loc[:, year].dropna().tolist())
