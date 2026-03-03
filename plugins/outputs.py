@@ -2,12 +2,78 @@ from typing import List
 import matplotlib.pyplot as plt
 
 class ConsoleWriter:
+    def __init__(self):
+        pass
 
-    def write(self, records: dict) -> None:
-        print("=== OUTPUT ===")
-        for record in records:
-            print(record)
+    def printTop10(self, data):
+        print("\nTop 10 Countries")
+        print("-" * 60)
 
+        for index, (country, value) in enumerate(data, 1):
+            print(f"{index:2}. {country:<25} {value:>15,.2f}")
+    def printBottom10(self, data):
+        print("\nBottom 10 Countries")
+        print("-" * 60)
+
+        for index, (country, value) in enumerate(data, 1):
+            print(f"{index:2}. {country:<25} {value:>15,.2f}")
+
+    def printGrowthRates(self, data):
+        print("\nGDP Growth Rates (%)")
+        print("-" * 60)
+
+        for country, growth in data:
+            print(f"{country:<25} {growth:>10.2f}%")
+
+    def printAvgByContinent(self, data):
+        print("\nAverage GDP by Continent")
+        print("-" * 60)
+
+        for continent, average in data:
+            print(f"{continent:<20} {average:>15,.2f}")
+
+    # def printGlobalTrend(self, data):
+    #     print("\nGlobal GDP Trend")
+    #     print("-" * 60)
+
+    #     for year, total in data:
+    #         print(f"{year:<10} {total:>20,.2f}")
+
+    # def printFastestContinent(self, continent):
+    #     print("\nFastest Growing Continent")
+    #     print("-" * 60)
+    #     print(continent)
+
+    # def printDeclineCountries(self, countries):
+    #     print("\nCountries with Consistent GDP Decline")
+    #     print("-" * 60)
+
+    #     if not countries:
+    #         print("None")
+    #     else:
+    #         for country in countries:
+    #             print(country)
+
+    # def printContribution(self, data):
+    #     print("\nContribution to Global GDP (%)")
+    #     print("-" * 60)
+
+    #     for continent, percentage in data:
+    #         print(f"{continent:<20} {percentage:>10.2f}%")    
+
+    def write(self, results: dict):
+        title = "GDP ANALYTICS DASHBOARD"
+        print("\n" + "=" * 60)
+        print(title.center(60))
+        print("=" * 60)
+        self.printTop10(results["top_10"])
+        self.printBottom10(results["bottom_10"])
+        self.printGrowthRates(results["growth_rates"])
+        self.printAvgByContinent(results["avg_by_continent"])
+        self.printGlobalTrend(results["global_trend"])
+        self.printFastestContinent(results["fastest_continent"])
+        self.printDeclineCountries(results["decline_countries"])
+        self.printContribution(results["contribution"])
 
 class GraphicsChartWriter:
 
