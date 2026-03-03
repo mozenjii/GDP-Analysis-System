@@ -116,30 +116,6 @@ class TransformationEngine(PipelineService):
             map(lambda r: r["Country Name"],
                 filter(declining, filtered.to_dict("records")))
         )
-    
-    
-
-
-
-
-
-
-
-
-
-    def consistentDecline(self, ds, region, end_year, x):
-        years = list(range(end_year - x + 1, end_year + 1))
-
-        filtered = ds[ds["Continent"] == region]
-
-        def declining(row):
-            values = [row[y] for y in years]
-            return all(values[i] > values[i+1] for i in range(len(values)-1))
-
-        return list(
-            map(lambda r: r["Country Name"],
-                filter(declining, filtered.to_dict("records")))
-        )
 
     def contribution(self, ds, start_year, end_year):
         years = list(range(start_year, end_year + 1))
