@@ -80,6 +80,13 @@ class TransformationEngine(PipelineService):
 
         return list(map(computeAvg, continents))
 
+    def globalTrend(self, ds, start_year, end_year):
+        years = list(range(start_year, end_year + 1))
+        return list(
+            map(lambda year: (year,ds[year].sum()),
+            years)
+        )
+
     def statistics(self,fds,op,year):
         sum = reduce(lambda e,i: e + i, fds.loc[:, year].dropna().tolist())
         if op == "sum":
