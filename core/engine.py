@@ -1,8 +1,8 @@
 from typing import List, Any
-from contracts import DataSink, PipelineService
+from core.contracts import DataSink, PipelineService
 import pandas as pd
 from functools import reduce
-from utility import *
+from core.utility import *
 
 
 class TransformationEngine(PipelineService):

@@ -28,7 +28,7 @@ class ExcelReader:
         self.service.execute(data)
 
 
-class CsvReader:
+class CSVReader:
     def __init__(self, service: PipelineService):
         self.service = service
 
