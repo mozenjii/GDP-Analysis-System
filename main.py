@@ -1,5 +1,5 @@
 import json
-from core.engine import TransformationEngine
+from core import TransformationEngine
 from plugins.inputs import ExcelReader, CSVReader
 from plugins.outputs import ConsoleWriter, GraphicsChartWriter
 
