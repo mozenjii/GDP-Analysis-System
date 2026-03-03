@@ -137,7 +137,7 @@ class TransformationEngine(PipelineService):
     def execute(self, raw_data: List[Any]) -> None:
 
         ds = self.cleanData(raw_data)
-        stat = self.statistics(fds,self.config["operation"],self.config["year"])
+        # stat = self.statistics(filterData(ds,self.config["region"], self.config["year"]),self.config["operation"],self.config["year"])
         results = {
             "top_10": self.top10(ds, self.config["region"], self.config["year"]),
             "bottom_10": self.bottom10(ds, self.config["region"], self.config["year"]),
@@ -146,7 +146,7 @@ class TransformationEngine(PipelineService):
             "global_trend": self.globalTrend(ds,self.config["start_year"],self.config["end_year"]),
             "fastest_continent": self.fastestContinent(ds,self.config["start_year"],self.config["end_year"]),
             "decline_countries": self.consistentDecline(ds,self.config["region"],self.config["end_year"],self.config["decline_years"]),
-            "contribution": self.contribution(ds,self.config["start_year"],self.config["end_year"]),
-            "statistics": stat
+            "contribution": self.contribution(ds,self.config["start_year"],self.config["end_year"])
+            # "statistics": stat
         }
         self.sink.write(results)

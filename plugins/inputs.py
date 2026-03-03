@@ -7,14 +7,14 @@ class ExcelReader:
     def __init__(self, service: PipelineService):
         self.service = service
 
-    def loadData():
+    def loadData(self):
         try:
             loadedData = pd.read_excel("data/gdp_with_continent_filled.xlsx")
         except FileNotFoundError:
             raise FileNotFoundError("Error: ""GDP with continent data"" file not found!")
         return loadedData
 
-    def restructureData(loadedData):
+    def restructureData(self,loadedData):
         exclude = ["Indicator_Name", "Indicator_Code"]
         rds = loadedData[[col for col in loadedData.columns if col not in exclude]].copy()
         if rds.empty:

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 class ConsoleWriter:
 
-    def write(self, records: List[dict]) -> None:
+    def write(self, records: dict) -> None:
         print("=== OUTPUT ===")
         for record in records:
             print(record)
@@ -87,12 +87,12 @@ class GraphicsChartWriter:
         for country in results["decline_countries"]:
             print(country)
 
-    def write(self, results: dict):
+    def write(self, records: dict):
 
-        self.plot_top_10(results["top_10"])
-        self.plot_bottom_10(results["bottom_10"])
-        self.plot_global_trend(results["global_trend"])
-        self.plot_contribution(results["contribution"])
-        self.plot_avg_by_continent(results["avg_by_continent"])
-        self.plot_growth_rates(results["growth_rates"])
-        self.print_summary(results)
+        self.plot_top_10(records["top_10"])
+        self.plot_bottom_10(records["bottom_10"])
+        self.plot_global_trend(records["global_trend"])
+        self.plot_contribution(records["contribution"])
+        self.plot_avg_by_continent(records["avg_by_continent"])
+        self.plot_growth_rates(records["growth_rates"])
+        self.print_summary(records)

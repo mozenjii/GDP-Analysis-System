@@ -6,7 +6,7 @@ class DataSink(Protocol):
     Outbound Abstraction.
     Core calls this to send processed results.
     """
-    def write(self, records: List[dict]) -> None:
+    def write(self, records: dict) -> None:
         ...
 
 

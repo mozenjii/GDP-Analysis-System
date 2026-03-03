@@ -15,7 +15,7 @@ OUTPUT_DRIVERS = {
 
 def readConfig():
     try:
-        with open("config.jason", "r") as f:
+        with open("config.json", "r") as f:
             config = json.load(f)
     except FileNotFoundError:
         raise FileNotFoundError("COnfiguration File not found!")
