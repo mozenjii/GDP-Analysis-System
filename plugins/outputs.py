@@ -32,34 +32,34 @@ class ConsoleWriter:
         for continent, average in data:
             print(f"{continent:<20} {average:>15,.2f}")
 
-    # def printGlobalTrend(self, data):
-    #     print("\nGlobal GDP Trend")
-    #     print("-" * 60)
+    def printGlobalTrend(self, data):
+        print("\nGlobal GDP Trend")
+        print("-" * 60)
 
-    #     for year, total in data:
-    #         print(f"{year:<10} {total:>20,.2f}")
+        for year, total in data:
+            print(f"{year:<10} {total:>20,.2f}")
 
-    # def printFastestContinent(self, continent):
-    #     print("\nFastest Growing Continent")
-    #     print("-" * 60)
-    #     print(continent)
+    def printFastestContinent(self, continent):
+        print("\nFastest Growing Continent")
+        print("-" * 60)
+        print(continent)
 
-    # def printDeclineCountries(self, countries):
-    #     print("\nCountries with Consistent GDP Decline")
-    #     print("-" * 60)
+    def printDeclineCountries(self, countries):
+        print("\nCountries with Consistent GDP Decline")
+        print("-" * 60)
 
-    #     if not countries:
-    #         print("None")
-    #     else:
-    #         for country in countries:
-    #             print(country)
+        if not countries:
+            print("None")
+        else:
+            for country in countries:
+                print(country)
 
-    # def printContribution(self, data):
-    #     print("\nContribution to Global GDP (%)")
-    #     print("-" * 60)
+    def printContribution(self, data):
+        print("\nContribution to Global GDP (%)")
+        print("-" * 60)
 
-    #     for continent, percentage in data:
-    #         print(f"{continent:<20} {percentage:>10.2f}%")    
+        for continent, percentage in data:
+            print(f"{continent:<20} {percentage:>10.2f}%")    
 
     def write(self, results: dict):
         title = "GDP ANALYTICS DASHBOARD"
