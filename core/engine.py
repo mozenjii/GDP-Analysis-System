@@ -146,6 +146,7 @@ class TransformationEngine(PipelineService):
             "global_trend": self.globalTrend(ds,self.config["start_year"],self.config["end_year"]),
             "fastest_continent": self.fastestContinent(ds,self.config["start_year"],self.config["end_year"]),
             "decline_countries": self.consistentDecline(ds,self.config["region"],self.config["end_year"],self.config["decline_years"]),
-            "contribution": self.contribution(ds,self.config["start_year"],self.config["end_year"])
+            "contribution": self.contribution(ds,self.config["start_year"],self.config["end_year"]),
+            "statistics": stat
         }
         self.sink.write(results)
