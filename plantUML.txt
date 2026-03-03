@@ -1,0 +1,89 @@
+@startuml
+title Phase 2 - Modular Architecture with Dependency Inversion
+
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+
+' ========================
+' Packages
+' ========================
+
+package "Main (Orchestrator)" {
+
+    class Main {
+        +bootstrap()
+    }
+
+}
+
+package "Core Module" {
+
+    interface DataSink <<Protocol>> {
+        +write(records: List<dict>) : None
+    }
+
+    interface PipelineService <<Protocol>> {
+        +execute(raw_data: List<Any>) : None
+    }
+
+    class TransformationEngine {
+        -sink : DataSink
+        +__init__(sink: DataSink)
+        +execute(raw_data: List<Any>) : None
+    }
+
+}
+
+package "Input Module (Source)" {
+
+    class CSVReader {
+        -service : PipelineService
+        +__init__(service: PipelineService)
+        +run() : None
+    }
+
+    class ExcelReader {
+        -service : PipelineService
+        +__init__(service: PipelineService)
+        +run() : None
+    }
+
+}
+
+package "Output Module (Sink)" {
+
+    class ConsoleWriter {
+        +write(records: List<dict>) : None
+    }
+
+    class GraphicsChartWriter {
+        +write(records: List<dict>) : None
+    }
+
+}
+
+' ========================
+' Dependency Relationships
+' ========================
+
+' Core implements inbound abstraction
+TransformationEngine ..|> PipelineService
+
+' Output implementations satisfy DataSink
+ConsoleWriter ..|> DataSink
+GraphicsChartWriter ..|> DataSink
+
+' Input depends on abstraction
+CSVReader --> PipelineService
+ExcelReader --> PipelineService
+
+' Core depends only on abstraction
+TransformationEngine --> DataSink
+
+' Main wires everything
+Main --> CsvReader
+Main --> JsonReader
+Main --> ConsoleWriter
+Main --> GraphicsChartWriter
+Main --> TransformationEngine
+@enduml

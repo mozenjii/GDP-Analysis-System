@@ -1,7 +1,6 @@
 import json
 from core import TransformationEngine
-from plugins.inputs import ExcelReader, CSVReader
-from plugins.outputs import ConsoleWriter, GraphicsChartWriter
+from plugins import CSVReader, ConsoleWriter,GraphicsChartWriter,ExcelReader
 
 INPUT_DRIVERS = {
     "excel": ExcelReader,
