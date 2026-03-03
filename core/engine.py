@@ -53,6 +53,22 @@ class TransformationEngine(PipelineService):
         result = sortedDf[["Country Name", year]].head(10)
         return list(result.itertuples(index=False, name=None))
     
+    def growthRates(self, ds, region, start_year, end_year):
+        filtered = ds[ds["Continent"] == region]
+        def computeGrowth(row):
+            start = row[start_year]
+            end = row[end_year]
+            if start > 0:
+                return ((end - start) / start) * 100
+            return 0
+
+        growthList = list(
+            map(lambda row: (row["Country Name"],computeGrowth(row)),
+            filtered.to_dict("records"))
+        )
+
+        return growthList
+    
 
     def statistics(self,fds,op,year):
         sum = reduce(lambda e,i: e + i, fds.loc[:, year].dropna().tolist())
