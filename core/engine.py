@@ -139,13 +139,13 @@ class TransformationEngine(PipelineService):
         ds = self.cleanData(raw_data)
         stat = self.statistics(fds,self.config["operation"],self.config["year"])
         results = {
-        "top_10": self.top10(ds, self.config["region"], self.config["year"]),
-        "bottom_10": self.bottom10(ds, self.config["region"], self.config["year"]),
-        "growth_rates": self.growthRates(ds,self.config["region"],self.config["start_year"],self.config["end_year"]),
-        "avg_by_continent": self.avgByContinent(ds,self.config["start_year"],self.config["end_year"]),
-        "global_trend": self.globalTrend(ds,self.config["start_year"],self.config["end_year"]),
-        "fastest_continent": self.fastestContinent(ds,self.config["start_year"],self.config["end_year"]),
-        "decline_countries": self.consistentDecline(ds,self.config["region"],self.config["end_year"],self.config["decline_years"]),
-        "contribution": self.contribution(ds,self.config["start_year"],self.config["end_year"])
-    }
-        #self.sink.write(results)
+            "top_10": self.top10(ds, self.config["region"], self.config["year"]),
+            "bottom_10": self.bottom10(ds, self.config["region"], self.config["year"]),
+            "growth_rates": self.growthRates(ds,self.config["region"],self.config["start_year"],self.config["end_year"]),
+            "avg_by_continent": self.avgByContinent(ds,self.config["start_year"],self.config["end_year"]),
+            "global_trend": self.globalTrend(ds,self.config["start_year"],self.config["end_year"]),
+            "fastest_continent": self.fastestContinent(ds,self.config["start_year"],self.config["end_year"]),
+            "decline_countries": self.consistentDecline(ds,self.config["region"],self.config["end_year"],self.config["decline_years"]),
+            "contribution": self.contribution(ds,self.config["start_year"],self.config["end_year"])
+        }
+        self.sink.write(results)
