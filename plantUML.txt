@@ -81,8 +81,8 @@ ExcelReader --> PipelineService
 TransformationEngine --> DataSink
 
 ' Main wires everything
-Main --> CsvReader
-Main --> JsonReader
+Main --> CSVReader
+Main --> ExcelReader
 Main --> ConsoleWriter
 Main --> GraphicsChartWriter
 Main --> TransformationEngine
