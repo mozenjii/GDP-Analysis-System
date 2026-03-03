@@ -87,6 +87,7 @@ class GraphicsChartWriter:
 
         plt.bar(countries, values)
         plt.xticks(rotation=45)
+        plt.ylabel("GDP (trillions)")
         plt.title("Top 10 Countries")
 
     def plotBottom10(self):
@@ -96,6 +97,7 @@ class GraphicsChartWriter:
 
         plt.bar(countries, values)
         plt.xticks(rotation=45)
+        plt.ylabel("GDP (trillions)")
         plt.title("Bottom 10 Countries")
 
     def plotGlobalTrend(self):
@@ -106,7 +108,7 @@ class GraphicsChartWriter:
         plt.plot(years, totals)
         plt.title("Global GDP Trend")
         plt.xlabel("Year")
-        plt.ylabel("Total GDP")
+        plt.ylabel("Total GDP (trillions)")
 
     def plotContribution(self):
         data = self.results["contribution"]
@@ -120,7 +122,7 @@ class GraphicsChartWriter:
         data = self.results["avg_by_continent"]
         continents = [x[0] for x in data]
         averages = [x[1] for x in data]
-
+        plt.ylabel("AVG GDP (trillions)")
         plt.bar(continents, averages)
         plt.xticks(rotation=45)
         plt.title("Average GDP by Continent")
