@@ -1,8 +1,8 @@
 {
-  "region": "Oceania",
+  "region": "Asia",
   "year": 1998,
   "operation": "sum",
-  "output": "console",
+  "output": "dashboard",
   "input": "excel",
   "start_year": 2015,
   "end_year": 2020,

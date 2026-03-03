@@ -80,70 +80,58 @@ class GraphicsChartWriter:
     def __init__(self):
         pass
 
-    def plot_top_10(self, data):
+    def plotTop10(self):
+        data = self.results["top_10"]
         countries = [x[0] for x in data]
         values = [x[1] for x in data]
 
-        plt.figure()
         plt.bar(countries, values)
         plt.xticks(rotation=45)
         plt.title("Top 10 Countries")
-        plt.tight_layout()
-        plt.show()
 
-    def plot_bottom_10(self, data):
+    def plotBottom10(self):
+        data = self.results["bottom_10"]
         countries = [x[0] for x in data]
         values = [x[1] for x in data]
 
-        plt.figure()
         plt.bar(countries, values)
         plt.xticks(rotation=45)
         plt.title("Bottom 10 Countries")
-        plt.tight_layout()
-        plt.show()
 
-    def plot_global_trend(self, data):
+    def plotGlobalTrend(self):
+        data = self.results["global_trend"]
         years = [int(x[0]) for x in data]
         totals = [x[1] for x in data]
 
-        plt.figure()
         plt.plot(years, totals)
         plt.title("Global GDP Trend")
         plt.xlabel("Year")
         plt.ylabel("Total GDP")
-        plt.tight_layout()
-        plt.show()
 
-    def plot_contribution(self, data):
+    def plotContribution(self):
+        data = self.results["contribution"]
         continents = [x[0] for x in data]
         percentages = [x[1] for x in data]
 
-        plt.figure()
-        plt.pie(percentages, labels=continents, autopct='%1.1f%%')
-        plt.title("Continent Contribution")
-        plt.show()
+        plt.pie(percentages, labels=continents, autopct="%1.1f%%")
+        plt.title("Contribution to Global GDP")
 
-
-    def plot_avg_by_continent(self, data):
+    def plotAvgByContinent(self):
+        data = self.results["avg_by_continent"]
         continents = [x[0] for x in data]
         averages = [x[1] for x in data]
 
-        plt.figure()
         plt.bar(continents, averages)
-        plt.title("Average GDP by Continent")
         plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.show()
-    
-    def plot_growth_rates(self, data):
+        plt.title("Average GDP by Continent")
+
+    def plotGrowthRates(self):
+        data = self.results["growth_rates"]
         countries = [x[0] for x in data]
         growth = [x[1] for x in data]
 
-        plt.figure()
         plt.barh(countries, growth)
-        plt.title("GDP Growth Rates")
-        plt.tight_layout()
-        plt.show()
+        plt.title("GDP Growth Rates (%)")
         
     def print_summary(self, results):
         print("\nFastest Growing Continent:")
@@ -153,12 +141,35 @@ class GraphicsChartWriter:
         for country in results["decline_countries"]:
             print(country)
 
+    def nextSlide(self, event):
+        if event.key == "right":
+            self.currentSlide = (self.currentSlide + 1) % len(self.slides)
+            self.showSlide()
+
+    def showSlide(self):
+        plt.clf()
+        self.slides[self.currentSlide]()
+        plt.tight_layout()
+        plt.draw()
+
     def write(self, records: dict):
 
-        self.plot_top_10(records["top_10"])
-        self.plot_bottom_10(records["bottom_10"])
-        self.plot_global_trend(records["global_trend"])
-        self.plot_contribution(records["contribution"])
-        self.plot_avg_by_continent(records["avg_by_continent"])
-        self.plot_growth_rates(records["growth_rates"])
+        self.results = records
+
+        self.slides = [
+            self.plotTop10,
+            self.plotBottom10,
+            self.plotGlobalTrend,
+            self.plotContribution,
+            self.plotAvgByContinent,
+            self.plotGrowthRates
+        ]
+
+        self.currentSlide = 0
         self.print_summary(records)
+
+        self.fig = plt.figure(figsize=(10, 6))
+        self.fig.canvas.mpl_connect("key_press_event", self.nextSlide)
+
+        self.showSlide()
+        plt.show()
